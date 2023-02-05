@@ -105,20 +105,20 @@ const calcDisplayBalance = function (movements) {
 
 // calcDisplayBalance(account2.movements);
 
-const calcDisplaySummary = function (movements) {
-  const incomes = movements
+const calcDisplaySummary = function (acc) {
+  const incomes = acc.movements
     .filter(mov => mov > 0)
     .reduce((acc, mov) => acc + mov, 0);
   labelSumIn.textContent = `${incomes}€`;
 
-  const outcomes = movements
+  const outcomes = acc.movements
     .filter(mov => mov < 0)
     .reduce((acc, mov) => acc + mov, 0);
   labelSumOut.textContent = `${Math.abs(outcomes)}`;
 
-  const interest = movements
+  const interest = acc.movements
     .filter(mov => mov > 0)
-    .map(deposits => (deposits * 1.2) / 100)
+    .map(deposits => (deposits * acc.interestRate) / 100)
     .filter((mov, i, arr) => {
       console.log(arr);
       return mov > 1;
@@ -323,23 +323,23 @@ const eurToUsd = 1.1;
 // console.log(movements);
 // console.log(movementsUSD);
 
-const movementsUSDfor = [];
+// const movementsUSDfor = [];
 
-for (const mov of movements) {
-  movementsUSDfor.push(mov * eurToUsd);
-}
+// for (const mov of movements) {
+//   movementsUSDfor.push(mov * eurToUsd);
+// }
 
-console.log(movementsUSDfor);
+// console.log(movementsUSDfor);
 
-const movementDescription = movements.map(function (movement, i, arr) {
-  if (movement > 0) {
-    return `Movement ${i} - Rs ${movement}€ diposited in your account`;
-  } else {
-    return `Movement ${i} - Rs ${Math.abs(movement)} withdrew in your account `;
-  }
-});
+// const movementDescription = movements.map(function (movement, i, arr) {
+//   if (movement > 0) {
+//     return `Movement ${i} - Rs ${movement}€ diposited in your account`;
+//   } else {
+//     return `Movement ${i} - Rs ${Math.abs(movement)} withdrew in your account `;
+//   }
+// });
 
-console.log(movementDescription);
+// console.log(movementDescription);
 
 // const user = 'Rashmi Ranjan Nayak';
 
@@ -372,12 +372,16 @@ btnLogin.addEventListener('click', function (e) {
       currentaccount.owner.split(' ')[0]
     }`;
     containerApp.style.opacity = 100;
+
+    inputLoginUsername.value = inputLoginPin.value = '';
+    inputLoginPin.blur();
+
     // Display movements
     displayMovements(currentaccount.movements);
     // Display balance
     calcDisplayBalance(currentaccount.movements);
     // Display Summary
-    calcDisplaySummary(currentaccount.movements);
+    calcDisplaySummary(currentaccount);
     console.log('Login');
   }
 });

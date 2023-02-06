@@ -77,10 +77,11 @@ const inputClosePin = document.querySelector('.form__input--pin');
 //   }
 // };
 
-const displayMovements = function (movements) {
+const displayMovements = function (movements, sort = false) {
   // containerMovements.textContent = '';
   containerMovements.innerHTML = '';
-  movements.forEach(function (mov, i) {
+  const movs = sort ? movements.slice().sort((a, b) => a - b) : movements;
+  movs.forEach(function (mov, i) {
     const type = mov > 0 ? 'deposit' : 'withdrawal';
     const html = `
     <div class="movements__row">
@@ -418,6 +419,7 @@ btnTransfer.addEventListener('click', function (e) {
   }
 });
 
+// Delete Account Function
 btnClose.addEventListener('click', function (e) {
   e.preventDefault();
   // console.log('Delete');
@@ -438,6 +440,35 @@ btnClose.addEventListener('click', function (e) {
     labelWelcome.textContent = 'Log in to get started ';
   }
 });
+
+// loan function
+
+btnLoan.addEventListener('click', function (e) {
+  e.preventDefault();
+  const eligiblerequestAmount = inputLoanAmount.value * 0.1;
+  console.log(eligiblerequestAmount);
+
+  const anyMov = movements.some(mov => mov >= eligiblerequestAmount);
+  console.log(anyMov);
+  if (anyMov) {
+    currentaccount.movements.push(Number(inputLoanAmount.value));
+
+    // updateUi
+    updateUI(currentaccount);
+    inputLoanAmount.value = '';
+    inputLoanAmount.blur();
+  }
+});
+
+// sort function
+let sorted = false;
+btnSort.addEventListener('click', function (e) {
+  e.preventDefault();
+  displayMovements(currentaccount.movements, !sorted);
+  sorted = !sorted;
+  console.log('sorting');
+});
+
 // const deposits = movements.filter(function (mov) {
 //   return mov > 0;
 // });
@@ -599,3 +630,98 @@ console.log(res_2);
 
 // const account = accounts.find(acc => acc.owner === 'Steven Thomas Williams');
 // console.log(account);
+
+// Some Method
+
+console.log(movements);
+
+// includes check equality
+// console.log(movements.includes(-130));
+
+// some check specific condition
+// const anydeposite = movements.some(mov => mov > 5000);
+// console.log(anydeposite);
+
+// Every
+
+console.log(account1.movements);
+
+// const anydeposites = account1.movements.every(mov => mov > 0);
+// console.log(anydeposites);
+
+// separate callback
+const deposit = mov => mov > 0;
+const anydeposites = account1.movements.every(deposit);
+console.log(anydeposites);
+
+// Flat Method
+
+// Traditional Method
+// const arr = [[1, 2, 3], [4, 5, 6], 7, 8];
+// const arr2 = [...arr[0], ...arr[1], arr[2], arr[3]];
+// console.log(arr2);
+
+// or
+// Using Flat
+
+const arr = [[1, 2, 3], [4, 5, 6], 7, 8];
+console.log(arr.flat());
+
+const arrDeep = [[[1, 2], 3], [4, [5, 6]], 7, 8];
+console.log(arrDeep.flat());
+console.log(arrDeep.flat(1));
+console.log(arrDeep.flat(2));
+
+// const allMovements = accounts.map(acc => acc.movements).flat();
+// console.log(allMovements);
+
+// const overallBalance=allMovements.reduce((acc,mov)=> acc+mov,0)
+// console.log(overallBalance);
+
+const overallBalance = accounts
+  .map(acc => acc.movements)
+  .flat()
+  .reduce((acc, mov) => acc + mov, 0);
+
+console.log(overallBalance);
+
+// Sort ()
+
+// const nameArr = ['Abhisek', 'Jack', 'Ranveer', 'Ishika'];
+// console.log(nameArr.sort());
+// console.log(nameArr);
+
+// console.log(movements);
+// console.log(movements.sort());
+
+// Sort
+
+// Ascending
+// movements.sort((a, b) => {
+//   if (a > b) {
+//     return 1;
+//   }
+//   if (a < b) {
+//     return -1;
+//   }
+// });
+
+// console.log(movements);
+
+// // Descending
+
+// movements.sort((a, b) => {
+//   if (a > b) {
+//     return -1;
+//   }
+//   if (a < b) {
+//     return 1;
+//   }
+// });
+
+// console.log(movements);
+
+// movements.sort((a, b) => a - b);
+// console.log(movements);
+// movements.sort((a, b) => b - a);
+// console.log(movements);
